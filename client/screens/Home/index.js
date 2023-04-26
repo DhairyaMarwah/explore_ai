@@ -1,4 +1,6 @@
-import React, { useState } from "react";
+import React, { useState,useEffect,useRef } from "react";
+import { Camera,CameraType } from 'expo-camera';
+import * as MediaLibrary from 'expo-media-library';
 import {
   StyleSheet,
   Text,
@@ -213,10 +215,42 @@ const Home = () => {
       </TouchableOpacity>
     ));
   };
-
+  
+const [hasPermission, sethasPermission] = useState(null)
+const [image, setimage] = useState(null)
+const [type, settype] = useState(Camera.Constants.Type.back)
+const [flash, setflash] = useState(Camera.Constants.FlashMode.off)
+const cameraRef = useRef(null)
+useEffect(() => {
+  (async () => {
+    MediaLibrary.requestPermissionsAsync()
+    const cameraStatus = await Camera.requestCameraPermissionsAsync()
+    sethasPermission(cameraStatus.status === 'granted')
+  })();
+}, [])
   return (
     <ScrollView>
       <View style={styles.homeContainer}>
+        {/* <View>
+          <Camera
+            style={styles.camera}
+           type={type}
+            flashMode={flash}
+            ref={cameraRef}
+
+          >
+            <Text style={{ color: 'white' }}>Hello</Text>
+            </Camera>
+        </View> */}
+      {/* <View>
+      <Camera
+        style={{ height: 500 }}
+        ref={ref => setCamera(ref)}
+      />
+      <TouchableOpacity onPress={takePicture}>
+        <Text>Capture</Text>
+      </TouchableOpacity>
+    </View> */}
         <View style={styles.headerWrap}>
           <Text style={styles.header}>
             Good Morning! {"\n"}
@@ -293,6 +327,9 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
     alignItems: "center",
     // marginBottom: 40,
+  },
+  camera:{
+    flex:1,
   },
   moodHistoryHeaderSubText: {
     marginBottom: 30,
@@ -435,6 +472,7 @@ const styles = StyleSheet.create({
   },
   homeContainer: {
     marginTop: 80,
+    
   },
   cardContainer: {
     marginLeft: 10,

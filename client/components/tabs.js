@@ -1,6 +1,7 @@
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import Home from "../screens/Home";
 import Profile from "../screens/Profile";
+import Video from "../screens/Video";
 const Tab = createBottomTabNavigator();
 const Tabs = () => {
   return (
@@ -9,7 +10,6 @@ const Tabs = () => {
         showLabel: false,
         tabBarStyle: {
           backgroundColor: "#fff",
-        //   position: "fixed",
           bottom: 20,
           marginLeft: 20,
           marginRight: 20,
@@ -29,8 +29,15 @@ const Tabs = () => {
         }}
       />
       <Tab.Screen
-        name="Profile"
+        name="Camera"
         component={Profile}
+        options={{
+          headerShown: false,
+        }}
+      />
+      <Tab.Screen
+        name="Video"
+        component={Video}
         options={{
           headerShown: false,
         }}
