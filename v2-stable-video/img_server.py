@@ -7,47 +7,53 @@ model = load_model('./models/model.h5')
 
 # Define emotion labels
 emotion_labels = ['Angry', 'Disgust', 'Fear', 'Happy', 'Sad', 'Surprise', 'Neutral']
-
-# Load input image
-img_path = 'image.png'
-img = cv2.imread(img_path)
-
-# Crop the image to the nearest 1x1 pixel
-img = img[0:img.shape[0]//2*2, 0:img.shape[1]//2*2]
-
-# Convert image to grayscale
-gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
-
-# Detect faces using Haar Cascade classifier
+video_path = 'video.mp4'
 face_cascade = cv2.CascadeClassifier('./models/haarcascade_frontalface_default.xml')
-faces = face_cascade.detectMultiScale(gray, 1.3, 5)
+cap = cv2.VideoCapture(video_path)
 
-# Loop over all detected faces
-for (x,y,w,h) in faces:
-    # Extract face region of interest (ROI)
-    roi_gray = gray[y:y+h, x:x+w]
+# Create an empty list to store detected emotions
+detected_emotions = []
 
-    # Resize ROI to match input size of the model
-    roi_gray = cv2.resize(roi_gray, (64, 64))
+while True:
+    # Read frames from the video
+    ret, frame = cap.read()
+    if not ret:
+        break
+        
+    # Convert the frame to grayscale
+    gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
+    
+    # Detect faces in the frame
+    faces = face_cascade.detectMultiScale(gray, 1.3, 5)
+    
+    # For each face, detect the emotion and save it in the detected_emotions list
+    for (x, y, w, h) in faces:
+        roi_gray = gray[y:y+h, x:x+w]
+        roi_gray = cv2.resize(roi_gray, (64, 64))
+        roi_gray = roi_gray / 255.0
+        roi_gray = np.reshape(roi_gray, (1, 64, 64, 1))
+        predictions = model.predict(roi_gray)
+        emotion_label = emotion_labels[np.argmax(predictions)]
+        detected_emotions.append(emotion_label)
+        
+        # Draw a rectangle around the face and display the detected emotion label
+        cv2.rectangle(frame, (x, y), (x+w, y+h), (0, 255, 0), 2)
+        cv2.putText(frame, emotion_label, (x, y-10), cv2.FONT_HERSHEY_SIMPLEX, 0.9, (0, 255, 0), 2)
+    
+    # Display the resulting frame
+    # cv2.imshow('Video', frame)
+    
+    # Exit on 'q' key press
+    if cv2.waitKey(1) & 0xFF == ord('q'):
+        break
 
-    # Normalize pixel values to be in range [0, 1]
-    roi_gray = roi_gray / 255.0
-
-    # Reshape ROI to match input shape of the model
-    roi_gray = np.reshape(roi_gray, (1, 64, 64, 1)) 
-
-    # Make prediction using the model
-    predictions = model.predict(roi_gray)
-
-    # Get the emotion label with highest predicted probability
-    emotion_label = emotion_labels[np.argmax(predictions)]
-
-    # Print the predicted emotion label in the terminal
-    print('Emotion:', emotion_label)
-
-    # Draw a rectangle around the detected face and label with predicted emotion
-    cv2.rectangle(img, (x, y), (x+w, y+h), (0, 255, 0), 2)
-    cv2.putText(img, emotion_label, (x, y-10), cv2.FONT_HERSHEY_SIMPLEX, 0.9, (0, 255, 0), 2)
- 
-cv2.waitKey(0)
+# Release the video capture object and destroy all windows
+cap.release()
 cv2.destroyAllWindows()
+
+# Find the emotion with the highest frequency
+if len(detected_emotions) > 0:
+    most_frequent_emotion = max(set(detected_emotions), key = detected_emotions.count)
+    print('The most frequent emotion detected in the video is:', most_frequent_emotion)
+else:
+    print('No faces detected in the video.')
