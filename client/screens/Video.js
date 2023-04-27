@@ -120,7 +120,7 @@ const VideoScreen = () => {
       <View
         style={{
           position: "absolute",
-          bottom: 20,
+          bottom: 140,
           left: 0,
           right: 0,
           alignItems: "center",

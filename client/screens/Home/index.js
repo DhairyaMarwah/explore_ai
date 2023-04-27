@@ -215,42 +215,12 @@ const Home = () => {
       </TouchableOpacity>
     ));
   };
-  
-const [hasPermission, sethasPermission] = useState(null)
-const [image, setimage] = useState(null)
-const [type, settype] = useState(Camera.Constants.Type.back)
-const [flash, setflash] = useState(Camera.Constants.FlashMode.off)
-const cameraRef = useRef(null)
-useEffect(() => {
-  (async () => {
-    MediaLibrary.requestPermissionsAsync()
-    const cameraStatus = await Camera.requestCameraPermissionsAsync()
-    sethasPermission(cameraStatus.status === 'granted')
-  })();
-}, [])
-  return (
-    <ScrollView>
+    
+  return ( 
+    <ScrollView 
+      style={styles.Wrapcontainer}
+    >
       <View style={styles.homeContainer}>
-        {/* <View>
-          <Camera
-            style={styles.camera}
-           type={type}
-            flashMode={flash}
-            ref={cameraRef}
-
-          >
-            <Text style={{ color: 'white' }}>Hello</Text>
-            </Camera>
-        </View> */}
-      {/* <View>
-      <Camera
-        style={{ height: 500 }}
-        ref={ref => setCamera(ref)}
-      />
-      <TouchableOpacity onPress={takePicture}>
-        <Text>Capture</Text>
-      </TouchableOpacity>
-    </View> */}
         <View style={styles.headerWrap}>
           <Text style={styles.header}>
             Good Morning! {"\n"}
@@ -316,12 +286,17 @@ useEffect(() => {
         </View>
         <Personalized />
       </View>
-    </ScrollView>
+    </ScrollView> 
   );
 };
 
 export default Home;
 const styles = StyleSheet.create({
+  Wrapcontainer:{
+    flex:1,
+    height:'100%', 
+    backgroundColor:'#f4f4f4',
+  },
   moodHistoryHeaderFlex: {
     flexDirection: "row",
     justifyContent: "space-between",

@@ -26,21 +26,21 @@ export default function App() {
 
   return (
     <NavigationContainer
-      tabBarStyle={{
-        showLabel: false,
-        tabBarStyle: {
-          backgroundColor: "#fff",
-          position: "fixed",
-          bottom: 20,
-          marginLeft: 20,
-          marginRight: 20,
-          elevation: 2,
-          borderRadius: 40,
-          safeAreaInsets: {
-            bottom: 0,
-          },
-        },
-      }}
+      // tabBarStyle={{
+      //   showLabel: false,
+      //   tabBarStyle: {
+      //     backgroundColor: "#fff",
+      //     position: "absolute",
+      //     bottom: 20,
+      //     marginLeft: 20,
+      //     marginRight: 20,
+      //     elevation: 2,
+      //     borderRadius: 40,
+      //     safeAreaInsets: {
+      //       bottom: 0,
+      //     },
+      //   },
+      // }}
     >
       <Tabs fontsLoaded={fontsLoaded}/>
     </NavigationContainer>

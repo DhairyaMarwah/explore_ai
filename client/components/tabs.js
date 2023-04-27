@@ -1,3 +1,4 @@
+import { Image, Text } from "react-native";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import Home from "../screens/Home";
 import Profile from "../screens/Profile";
@@ -12,11 +13,23 @@ const Tabs = ({ fontsLoaded }) => {
             showLabel: false,
             tabBarStyle: {
               backgroundColor: "#fff",
-              bottom: 20,
-              marginLeft: 20,
-              marginRight: 20,
-              elevation: 2,
-              borderRadius: 40,
+              display: "flex",
+              justifyContent: "center",
+              alignItems: "center",
+              bottom: 26,
+              marginLeft: 15,
+              position: "absolute",
+              marginRight: 15,
+              elevation: 5,
+              borderRadius: 14,
+              shadowColor: "#000",
+              shadowOffset: {
+                width: 2,
+                height: 2,
+              },
+              shadowOpacity: 0.16,
+              paddingTop: 20,
+              shadowRadius: 3.8,
               safeAreaInsets: {
                 bottom: 0,
               },
@@ -27,14 +40,64 @@ const Tabs = ({ fontsLoaded }) => {
             name="Home"
             component={Home}
             options={{
+              tabBarLabel: ({ focused }) => (
+                <Text
+                  style={{
+                    fontSize: 14,
+                    color: focused ? "#000" : "#ccc",
+                    fontFamily: "RedHatMedium",
+                    position: "absolute",
+                    bottom: -10,
+                  }}
+                >
+                  Home
+                </Text>
+              ),
+
               headerShown: false,
+              tabBarIcon: ({ focused }) => (
+                <Image
+                  source={require("../assets/homeicon.png")}
+                  style={{
+                    tintColor: focused ? "#0067FF" : "#A8A8A8",
+                    position: "absolute",
+                    bottom: 9,
+                    transform: [{ scale: focused ? 1.1 : 1 }],
+                  }}
+                />
+              ),
             }}
           />
+
           <Tab.Screen
             name="Camera"
             component={Profile}
             options={{
               headerShown: false,
+              tabBarLabel: ({ focused }) => (
+                <Text
+                  style={{
+                    fontSize: 14,
+                    color: focused ? "#000" : "#ccc",
+                    fontFamily: "RedHatMedium",
+                    position: "absolute",
+                    bottom: -10,
+                  }}
+                >
+                  Camera
+                </Text>
+              ),
+              tabBarIcon: ({ focused }) => (
+                <Image
+                  source={require("../assets/scanicon.png")}
+                  style={{
+                    tintColor: focused ? "#0067FF" : "#A8A8A8",
+                    position: "absolute",
+                    bottom: 9,
+                    transform: [{ scale: focused ? 1.1 : 1 }],
+                  }}
+                />
+              ),
             }}
           />
           <Tab.Screen
@@ -42,6 +105,61 @@ const Tabs = ({ fontsLoaded }) => {
             component={VideoScreen}
             options={{
               headerShown: false,
+              tabBarLabel: ({ focused }) => (
+                <Text
+                  style={{
+                    fontSize: 14,
+                    color: focused ? "#000" : "#ccc",
+                    fontFamily: "RedHatMedium",
+                    position: "absolute",
+                    bottom: -10,
+                  }}
+                >
+                  Video
+                </Text>
+              ),
+              tabBarIcon: ({ focused }) => (
+                <Image
+                  source={require("../assets/scanicon.png")}
+                  style={{
+                    tintColor: focused ? "#0067FF" : "#A8A8A8",
+                    position: "absolute",
+                    bottom: 9,
+                    transform: [{ scale: focused ? 1.1 : 1 }],
+                  }}
+                />
+              ),
+            }}
+          />
+          <Tab.Screen
+            name="Profile"
+            component={VideoScreen}
+            options={{
+              headerShown: false,
+              tabBarLabel: ({ focused }) => (
+                <Text
+                  style={{
+                    fontSize: 14,
+                    color: focused ? "#000" : "#ccc",
+                    fontFamily: "RedHatMedium",
+                    position: "absolute",
+                    bottom: -10,
+                  }}
+                >
+                  Profile
+                </Text>
+              ),
+              tabBarIcon: ({ focused }) => (
+                <Image
+                  source={require("../assets/usericon.png")}
+                  style={{
+                    tintColor: focused ? "#0067FF" : "#A8A8A8",
+                    position: "absolute",
+                    bottom: 9,
+                    transform: [{ scale: focused ? 1.1 : 1 }],
+                  }}
+                />
+              ),
             }}
           />
         </Tab.Navigator>
