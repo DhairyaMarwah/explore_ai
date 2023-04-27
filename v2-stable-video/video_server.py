@@ -21,9 +21,10 @@ def upload():
         video_filename = video_file.filename
         video_save_path = os.path.join('uploads', video_filename)
         video_file.save(video_save_path) 
+
         audio_save_path = os.path.join('uploads', os.path.splitext(video_filename)[0] + '.mp3')
-        subprocess.call(['ffmpeg', '-i', video_save_path, '-vn', '-acodec', 'libmp3lame', audio_save_path])
-        print("reached",video_file) 
+        subprocess.call(['ffmpeg', '-i', video_save_path, '-vn', '-acodec', 'libmp3lame', '-y', audio_save_path])
+        # print("reached", video_file) 
         return emotion(video_save_path)
      
 def emotion(video_save_path):
@@ -53,9 +54,10 @@ def emotion(video_save_path):
     cv2.destroyAllWindows() 
     if len(detected_emotions) > 0:
         most_frequent_emotion = max(set(detected_emotions), key=detected_emotions.count) 
+        print("emotions",most_frequent_emotion)
         return jsonify({'emotions': most_frequent_emotion})
     else: 
         return jsonify({'emotions': "No faces detected in the video."})
 
 if __name__ == "__main__":
-    app.run(debug=True)
+    app.run(host='0.0.0.0', port=5000, debug=True)
