@@ -3,6 +3,10 @@ import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import Home from "../screens/Home";
 import Profile from "../screens/Profile";
 import VideoScreen from "../screens/Video";
+import Live from "../screens/Live";
+import { Socket } from "socket.io-client";
+import SocketCode from "../screens/Socket"; 
+import Tensor from "../screens/Tensor";
 const Tab = createBottomTabNavigator();
 const Tabs = ({ fontsLoaded }) => {
   return (
@@ -69,9 +73,9 @@ const Tabs = ({ fontsLoaded }) => {
             }}
           />
 
-          <Tab.Screen
-            name="Camera"
-            component={Profile}
+          {/* <Tab.Screen
+            name="Tensor"
+            component={Tensor}
             options={{
               headerShown: false,
               tabBarLabel: ({ focused }) => (
@@ -84,7 +88,7 @@ const Tabs = ({ fontsLoaded }) => {
                     bottom: -10,
                   }}
                 >
-                  Camera
+                  Tensor
                 </Text>
               ),
               tabBarIcon: ({ focused }) => (
@@ -99,7 +103,7 @@ const Tabs = ({ fontsLoaded }) => {
                 />
               ),
             }}
-          />
+          /> */}
           <Tab.Screen
             name="Video"
             component={VideoScreen}
@@ -132,8 +136,8 @@ const Tabs = ({ fontsLoaded }) => {
             }}
           />
           <Tab.Screen
-            name="Profile"
-            component={VideoScreen}
+            name="Live"
+            component={Live}
             options={{
               headerShown: false,
               tabBarLabel: ({ focused }) => (
@@ -146,7 +150,7 @@ const Tabs = ({ fontsLoaded }) => {
                     bottom: -10,
                   }}
                 >
-                  Profile
+                  Live
                 </Text>
               ),
               tabBarIcon: ({ focused }) => (

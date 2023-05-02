@@ -1,6 +1,6 @@
-import React, { useState,useEffect,useRef } from "react";
-import { Camera,CameraType } from 'expo-camera';
-import * as MediaLibrary from 'expo-media-library';
+import React, { useState, useEffect, useRef } from "react";
+import { Camera, CameraType } from "expo-camera";
+import * as MediaLibrary from "expo-media-library";
 import {
   StyleSheet,
   Text,
@@ -9,8 +9,10 @@ import {
   ScrollView,
   TouchableOpacity,
 } from "react-native";
+import { useNavigation } from "@react-navigation/native";
 import { BarChart, XAxis, Grid } from "react-native-svg-charts";
 import { Circle, G, Line } from "react-native-svg";
+
 import * as scale from "d3-scale";
 const DATA = [
   {
@@ -93,8 +95,8 @@ const Card = ({ item }) => {
           </View>
         </View>
         <View style={styles.cardContent}>
-          <Text style={styles.smalltext}>{item.smalltext}</Text>
-          <Text style={styles.bigtext}>{item.bigtext}</Text>
+          {/* <Text style={styles.smalltext}>{item.smalltext}</Text> */}
+          <Text style={styles.bigtext}>{item.mood}</Text>
         </View>
         <View
           style={[
@@ -109,22 +111,24 @@ const Card = ({ item }) => {
   );
 };
 
-const HorizontalScrollableCards = () => {
+const HorizontalScrollableCards = ({ moodsData }) => {
   return (
     <ScrollView horizontal>
-      {DATA.map((item) => (
+      {moodsData?.map((item) => (
         <Card key={item.id} item={item} />
       ))}
     </ScrollView>
   );
 };
-const DescribeCard = () => {
+const DescribeCard = ({ navigation }) => {
   return (
     <View style={styles.describeCard}>
       <Text style={styles.describeCarImage}>🚀</Text>
-      <Text style={styles.describeCardText}>
-        Get in the Mood for a better day with MoodDiary. Describe{" "}
-      </Text>
+      <TouchableOpacity onPress={() => navigation.navigate("Video")}>
+        <Text style={styles.describeCardText}>
+          Get in the Mood for a better day with MoodDiary. Describe{" "}
+        </Text>
+      </TouchableOpacity>
     </View>
   );
 };
@@ -171,19 +175,28 @@ const Home = () => {
   ];
   const [selectedBarIndex, setSelectedBarIndex] = useState(null);
 
+
+  const [moodsData, setmoodsData] = useState([]);
+  useEffect(() => {
+    fetch("http://172.20.10.2:5000/users")
+      .then((response) => response.json())
+      .then((data) => {
+        setmoodsData(data[0]?.moods);
+      })
+      .catch((error) => console.error(error));
+  }, []);
   const data = [2, 5, 2, 3, 6, 1, 4];
   const xAxisLabels = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
   const yAxisLabels = [
-    "Very Sad",
+    "Happy",
     "Sad",
+    "Neutral",
     "Super Happy",
 
-    "Neutral",
     "Happy",
-    "Ultra Happy",
+    "Ultra Happy", 
     "Very Happy",
   ];
-
   const Decorator = ({ x, y, data }) => {
     return data.map((value, index) => (
       <TouchableOpacity key={index} onPress={() => setSelectedBarIndex(index)}>
@@ -215,11 +228,9 @@ const Home = () => {
       </TouchableOpacity>
     ));
   };
-    
-  return ( 
-    <ScrollView 
-      style={styles.Wrapcontainer}
-    >
+  const navigation = useNavigation();
+  return (
+    <ScrollView style={styles.Wrapcontainer}>
       <View style={styles.homeContainer}>
         <View style={styles.headerWrap}>
           <Text style={styles.header}>
@@ -232,9 +243,9 @@ const Home = () => {
           />
         </View>
         <View style={styles.cardContainer}>
-          <HorizontalScrollableCards />
+          <HorizontalScrollableCards moodsData={moodsData} />
         </View>
-        <DescribeCard />
+        <DescribeCard navigation={navigation} />
         <View style={styles.chartcontainer}>
           <View style={styles.moodHistoryHeaderFlex}>
             <View style={styles.moodHistoryHeaderContent}>
@@ -286,16 +297,16 @@ const Home = () => {
         </View>
         <Personalized />
       </View>
-    </ScrollView> 
+    </ScrollView>
   );
 };
 
 export default Home;
 const styles = StyleSheet.create({
-  Wrapcontainer:{
-    flex:1,
-    height:'100%', 
-    backgroundColor:'#f4f4f4',
+  Wrapcontainer: {
+    flex: 1,
+    height: "100%",
+    backgroundColor: "#f4f4f4",
   },
   moodHistoryHeaderFlex: {
     flexDirection: "row",
@@ -303,8 +314,8 @@ const styles = StyleSheet.create({
     alignItems: "center",
     // marginBottom: 40,
   },
-  camera:{
-    flex:1,
+  camera: {
+    flex: 1,
   },
   moodHistoryHeaderSubText: {
     marginBottom: 30,
@@ -364,6 +375,7 @@ const styles = StyleSheet.create({
   },
   personalizedScrollView: {
     marginLeft: 10,
+    marginBottom: 130,
     marginTop: 10,
   },
   grid: {
@@ -390,6 +402,7 @@ const styles = StyleSheet.create({
   },
   personalized: {
     marginTop: 25,
+    
     width: "90%",
     marginLeft: "auto",
     marginRight: "auto",
@@ -447,7 +460,6 @@ const styles = StyleSheet.create({
   },
   homeContainer: {
     marginTop: 80,
-    
   },
   cardContainer: {
     marginLeft: 10,
@@ -496,9 +508,9 @@ const styles = StyleSheet.create({
     color: "#fff",
   },
   bigtext: {
-    fontSize: 35,
+    fontSize: 33,
     lineHeight: 40,
-    marginTop: -5,
+    marginTop: 9,
     fontWeight: "700",
     fontFamily: "RedHatBold",
     color: "#fff",
